@@ -1,0 +1,33 @@
+﻿table.tokenhelp  {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+.token-name { padding-left: 15px }
+.token-type td { font-weight: bold; }
+.token-group-name { width: 120px;}
+
+/*
+.token-collapsed { display: none }
+*/
+
+.tokenized-popup 
+{
+    position:absolute;
+    background: url('images/tokensPopup.gif');
+    background-repeat: no-repeat;
+    width:10px;
+    height:10px;
+    cursor: pointer;
+}
+    
+.tokens-close {
+    float:right;
+    background: url('images/closeButtons.png');
+    background-repeat: no-repeat;
+}
+
+.ui-dialog-titlebar  {
+    display:none;
+}
+

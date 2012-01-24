@@ -1,0 +1,49 @@
+﻿@model WebAdvanced.Sitemap.ViewModels.CustomRouteModel
+@{
+    var priorityList = new List<SelectListItem> {
+        new SelectListItem{ Text = "Very High", Value = "5",    Selected = Model.Priority == 5 },
+        new SelectListItem{ Text = "High", Value = "4",         Selected = Model.Priority == 4 },
+        new SelectListItem{ Text = "Medium", Value = "3",       Selected = Model.Priority == 3 },
+        new SelectListItem{ Text = "Low", Value = "2",          Selected = Model.Priority == 2 },
+        new SelectListItem{ Text = "Very Low", Value = "1",     Selected = Model.Priority == 1 },
+    };
+    
+    var frequencyList = new List<SelectListItem> {
+        new SelectListItem{ Text = "Always", Value = "always", Selected = Model.UpdateFrequency == "always"},
+        new SelectListItem{ Text = "Hourly", Value = "hourly", Selected = Model.UpdateFrequency == "hourly"},
+        new SelectListItem{ Text = "Daily", Value = "daily", Selected = Model.UpdateFrequency == "daily"},
+        new SelectListItem{ Text = "Weekly", Value = "weekly", Selected = Model.UpdateFrequency == "weekly"},
+        new SelectListItem{ Text = "Monthly", Value = "monthly", Selected = Model.UpdateFrequency == "monthly"},
+        new SelectListItem{ Text = "Yearly", Value = "yearly", Selected = Model.UpdateFrequency == "yearly"},
+        new SelectListItem{ Text = "Never", Value = "never", Selected = Model.UpdateFrequency == "never"},
+    };
+
+    var appPath = string.Format("{0}://{1}{2}{3}",
+        Context.Request.Url.Scheme,
+        Context.Request.Url.Host,
+        Context.Request.Url.Port == 80
+            ? string.Empty
+            : ":" + Context.Request.Url.Port,
+        Context.Request.ApplicationPath);
+
+    if (!appPath.EndsWith("/")) {
+        appPath += "/";
+    }
+}
+<tr>
+<td><span>@appPath</span>@Html.TextBoxFor(m => m.Url, new {@class = "textMedium"})</td>
+<td class="center">@Html.CheckBoxFor(m => m.IndexForDisplay, new { @class = "checkbox" })</td>
+<td class="center">@Html.CheckBoxFor(m => m.IndexForXml, new { @class = "checkbox" })</td>
+<td><select name="@Html.FieldNameFor(m => m.Priority)" id="@Html.FieldIdFor(m => m.Priority)">
+        @foreach (var item in priorityList) {
+            @Html.SelectOption(item.Value, item.Selected, item.Text)
+        }
+    </select>
+</td>
+<td><select name="@Html.FieldNameFor(m => m.UpdateFrequency)" id="@Html.FieldIdFor(m => m.UpdateFrequency)">
+        @foreach (var item in frequencyList) {
+            @Html.SelectOption(item.Value, item.Selected, item.Text)
+        }
+    </select>
+</td>
+<td><div class="delete-button"><button class="button grey">Remove</button></div></td>

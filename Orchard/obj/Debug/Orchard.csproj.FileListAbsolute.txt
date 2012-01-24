@@ -1,0 +1,7 @@
+c:\Projects\Orchard-Sitemap\Orchard\bin\Orchard.dll
+c:\Projects\Orchard-Sitemap\Orchard\bin\Orchard.pdb
+c:\Projects\Orchard-Sitemap\Orchard\bin\EntityFramework.dll
+c:\Projects\Orchard-Sitemap\Orchard\bin\EntityFramework.xml
+c:\Projects\Orchard-Sitemap\Orchard\obj\Debug\ResolveAssemblyReference.cache
+c:\Projects\Orchard-Sitemap\Orchard\obj\Debug\Orchard.dll
+c:\Projects\Orchard-Sitemap\Orchard\obj\Debug\Orchard.pdb

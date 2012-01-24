@@ -1,0 +1,35 @@
+﻿@using Orchard.Tokens
+@{
+    var tokens = Model.Tokens as IEnumerable<TokenTypeDescriptor>;
+    if (tokens == null)
+    {
+        tokens = Html.Resolve<ITokenManager>().Describe((IEnumerable<string>)Model.Targets);
+    }
+}
+<table class="token-help items">
+    <thead>
+        <tr>
+            <th class="token-group-name">@T("Name")</th>
+            <th class="token-group-token">@T("Token")</th>
+            <th class="token-group-desc">@T("Description")</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var tokenType in tokens.OrderBy(d => d.Name.ToString()))
+    {
+        <tr class="token-type">
+            <td class="token-typename">@tokenType.Name</td>
+            <td>&nbsp;</td>
+            <td class="token-desc">@tokenType.Description</td>
+        </tr>
+        foreach (var token in tokenType.Tokens.OrderBy(t => t.Name.ToString()))
+        {
+        <tr class="token-subtoken token-collapsed">
+            <td class="token-name">@token.Name</td>
+            <td class="token-token">{@token.Target.@token.Token}</td>
+            <td class="token-desc">@token.Description</td>
+        </tr>
+        }
+    }
+    </tbody>
+</table>

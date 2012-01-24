@@ -1,0 +1,10 @@
+﻿@{
+    Layout.Title = T("Sitemap").ToString();
+    int col = 0;
+    Style.Include("WebAdvanced.Sitemap.Display.css");
+}
+<div class="sitemap">
+    <div class="content group">
+        @DisplayChildren(Model.Columns)
+    </div>
+</div>
