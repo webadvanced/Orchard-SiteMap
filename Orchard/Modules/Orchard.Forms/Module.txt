@@ -1,0 +1,12 @@
+Name: Forms
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardforms.codeplex.com
+Version: 1.3.0
+OrchardVersion: 1.3.0
+Description: Provides a system to publish and alter html forms.
+Features:
+    Orchard.Forms:
+        Name: Forms
+        Description: Provides a system to publish and alter html forms.
+		Category: Developer

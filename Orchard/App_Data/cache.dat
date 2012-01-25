@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Tenants>
+  <Default>3|Orchard.Framework;Common;Containers;Contents;Dashboard;Feeds;HomePage;Navigation;Reports;Routable;Scheduling;Settings;Shapes;Title;Orchard.Pages;Orchard.Themes;Orchard.Users;Orchard.Roles;Orchard.Modules;PackagingServices;Orchard.Packaging;Gallery;Orchard.Recipes;Orchard.Blogs;Orchard.Widgets;Orchard.Scripting;Orchard.jQuery;Orchard.PublishLater;Orchard.jQuery;Orchard.Comments;Orchard.Tags;Orchard.Lists;TinyMce;Orchard.Media;Orchard.MediaPicker;Orchard.Media;Orchard.jQuery;Orchard.PublishLater;Orchard.jQuery;Orchard.jQuery;Orchard.Widgets;Orchard.Scripting;Orchard.Widgets.PageLayerHinting;Orchard.Widgets;Orchard.Scripting;Orchard.ContentTypes;Orchard.Scripting;Orchard.Scripting.Lightweight;Orchard.Scripting;PackagingServices;Orchard.Packaging;Orchard.Warmup;TheThemeMachine;WebAdvanced.Sitemap;|</Default>
+</Tenants>

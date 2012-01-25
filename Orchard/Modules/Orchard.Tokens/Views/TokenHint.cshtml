@@ -1,0 +1,7 @@
+﻿@{
+    Script.Require("jQueryUI_Dialog");
+    Script.Include("TokenHelp.js");
+    Style.Include("orchard-tokenhelp.css");
+}   
+
+<div style="display: none;" id="token-hint-dialog" data-url="@Url.Action("List", "Admin", new { area = "Orchard.Tokens" })"></div>

@@ -1,0 +1,14 @@
+﻿<div class="item-group">
+    @if (String.IsNullOrEmpty((string)Model.Url)) {
+        <h2>@Model.Title</h2>
+    }
+    else {
+        <h2>@Html.Link((string)Model.Title, Url.Content("~/" + (string)Model.Url))</h2>
+    }
+
+    @if (Model.Children.Count > 0) {
+        <ul>
+            @DisplayChildren(Model.Children)
+        </ul>
+    }
+</div>
