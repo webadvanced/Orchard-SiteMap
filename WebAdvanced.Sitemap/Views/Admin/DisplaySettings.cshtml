@@ -1,0 +1,51 @@
+﻿@model WebAdvanced.Sitemap.ViewModels.DisplaySettingsPageModel
+@{
+    Script.Include("jquery-ui-1.8.17.custom.min.js");
+    Script.Include("admin.displaysettings.js");
+    Style.Include("WebAdvanced.Sitemap.Admin.css");
+    
+    var disabledItems = Model.Routes.Where(r => !r.Active).ToList();
+    var enabledItems = Model.Routes.Where(r => r.Active).ToList();
+    var colItems1 = enabledItems.Where(i => i.DisplayColumn <= 1).OrderBy(i => i.Weight).ToList();
+    var colItems2 = enabledItems.Where(i => i.DisplayColumn == 2).OrderBy(i => i.Weight).ToList();
+    var colItems3 = enabledItems.Where(i => i.DisplayColumn == 3).OrderBy(i => i.Weight).ToList();
+    
+    Layout.Title = T("Sitemap Display Settings").ToString();
+    
+}
+<p>Position route groups within the Active Routes columns to set where they will appear on the sitemap page.</p>
+<hr/>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset>
+        <legend>Disabled Routes</legend>
+        <div class="disabled-items">
+            @foreach (var item in disabledItems) {
+                @Html.DisplayFor(m => item, new { enabled = false })
+            }
+        </div>
+    </fieldset>
+    <hr/>
+    <fieldset>
+        <legend>Active Routes</legend>
+        <div class="sitemap-layout group">
+            <div id="col-1" class="column">
+            @foreach (var item in colItems1) {
+                @Html.DisplayFor(m => item, new { enabled = true })
+            }
+            </div>
+            <div id="col-2" class="column">
+            @foreach (var item in colItems2) {
+                @Html.DisplayFor(m => item, new { enabled = true })
+            }
+            </div>
+            <div id="col-3" class="column">
+            @foreach (var item in colItems3) {
+                @Html.DisplayFor(m => item, new { enabled = true })
+            }
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit">Save</button>
+    </fieldset>
+}

@@ -1,0 +1,23 @@
+﻿@model WebAdvanced.Sitemap.ViewModels.RouteSettingsModel
+@{
+    var portletClass = Model.Active ? "portlet" : "portlet disabled";
+}
+<div class="@portletClass">
+    <input type="hidden" name="Routes.Index" value="@Model.Id"/>
+    <input type="hidden" name="Routes[@Model.Id].Weight" value="@Model.Weight"/>
+    <input type="hidden" name="Routes[@Model.Id].Active" value="@Model.Active"/>
+    <input type="hidden" name="Routes[@Model.Id].Id" value="@Model.Id"/>
+    <input type="hidden" name="Routes[@Model.Id].DisplayColumn" value="@Model.DisplayColumn"/>
+    <input type="hidden" name="Routes[@Model.Id].DisplayLevels" value="@Model.DisplayLevels"/>
+    <div class="titlebar">
+        <span class="title">@Model.Name</span>
+    </div>
+    <div class="display-levels-container">
+        <label>Display Levels</label>
+        <div class="levels-controls">
+            <span class="levels-decrease"><a href="#">-</a></span>
+            <span class="levels-display">@Model.DisplayLevels</span>
+            <span class="levels-increase"><a href="#">+</a></span>
+        </div>
+    </div>
+</div>

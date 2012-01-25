@@ -1,0 +1,17 @@
+﻿@{
+    var hasChildren = Model.Children.Count > 0;
+}
+<li @(new MvcHtmlString(hasChildren ? "class=\"has-children\"" : ""))>
+    @if (String.IsNullOrEmpty((string)Model.Url)) {
+        @Model.Title
+    }
+    else {
+        @Html.Link((string)Model.Title, Url.Content("~/" + (string)Model.Url))
+    }
+
+    @if (Model.Children.Count > 0) {
+        <ul>
+            @DisplayChildren(Model.Children)
+        </ul>
+    }
+</li>
