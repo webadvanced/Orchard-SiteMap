@@ -56,11 +56,13 @@ namespace WebAdvanced.Sitemap.Controllers {
         public ActionResult Indexing(IndexingPageModel model) {
             if (!_services.Authorizer.Authorize(Permissions.ManageSitemap, T("Not allowed to manage sitemap")))
                 return new HttpUnauthorizedResult();
-
-            _sitemapService.SetIndexSettings(model.ContentTypeSettings);
-            if (model.CustomRoutes != null) {
-                _sitemapService.SetCustomRoutes(model.CustomRoutes);
+            
+            if (model.CustomRoutes == null) {
+                model.CustomRoutes = new List<CustomRouteModel>();
             }
+            
+            _sitemapService.SetIndexSettings(model.ContentTypeSettings);
+            _sitemapService.SetCustomRoutes(model.CustomRoutes);
 
             _services.Notifier.Add(NotifyType.Information, T("Saved Sitemap indexing settings"));
             return RedirectToAction("Indexing");
