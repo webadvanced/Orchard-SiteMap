@@ -1,5 +1,7 @@
-﻿namespace WebAdvanced.Sitemap.Services {
-    public interface ISitemapRouteFilter {
+﻿using Orchard;
+
+namespace WebAdvanced.Sitemap.Services {
+    public interface ISitemapRouteFilter : IDependency {
         /// <summary>
         /// Filter function to disallow certain paths from appearing for display and xml.
         /// </summary>
