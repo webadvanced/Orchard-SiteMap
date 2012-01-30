@@ -1,10 +1,12 @@
-Name: WebAdvanced.Sitemap
+Name: Advanced Sitemap
 AntiForgery: enabled
-Author: The Orchard Team
-Website: http://orchardproject.net
-Version: 1.0
-OrchardVersion: 1.0
-Description: Description for the module
+Author: WebAdvanced
+Website: https://github.com/webadvanced/Orchard-SiteMap/wiki
+Version: 1.1
+OrchardVersion: 1.3
+Description: Provides a highly configurable XML and HTML sitemap.
 Features:
     WebAdvanced.Sitemap:
-        Description: Description for feature WebAdvanced.Sitemap.
+        Description: Provides a highly configurable XML and HTML sitemap.
+	Name: Advanced Sitemap
+	Category: Navigation
