@@ -23,6 +23,7 @@ namespace WebAdvanced.Sitemap.Controllers {
         private readonly ICacheManager _cacheManager;
         private readonly IClock _clock;
         private readonly IContentManager _contentManager;
+        private readonly IEnumerable<ISitemapRouteFilter> _routeFilters;
 
         public dynamic Shape { get; set; }
 
@@ -31,11 +32,13 @@ namespace WebAdvanced.Sitemap.Controllers {
             IShapeFactory shapeFactory,
             ICacheManager cacheManager,
             IClock clock,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IEnumerable<ISitemapRouteFilter> routeFilters) {
             _sitemapService = sitemapService;
             _cacheManager = cacheManager;
             _clock = clock;
             _contentManager = contentManager;
+            _routeFilters = routeFilters;
 
             Shape = shapeFactory;
         }
@@ -73,7 +76,10 @@ namespace WebAdvanced.Sitemap.Controllers {
                 // Compile all content urls
                 var contentItems = _contentManager.Query(VersionOptions.Published, contentSettings.Keys.ToArray()).List();
                 foreach (var item in contentItems) {
-                    var url = rootUrl + item.As<IRoutableAspect>().Slug;
+                    if (!_routeFilters.All(filter => filter.AllowUrl(item.As<IRoutableAspect>().Path)))
+                        continue;
+
+                    var url = rootUrl + item.As<IRoutableAspect>().Path;
                     var dateModified = item.As<CommonPart>().ModifiedUtc;
                     var element = new XElement("url");
                     element.Add(new XElement("loc", url));

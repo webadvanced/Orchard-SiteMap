@@ -6,13 +6,11 @@ using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Contents.Settings;
 using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.Services;
 using WebAdvanced.Sitemap.Models;
 using WebAdvanced.Sitemap.ViewModels;
-using Orchard.Core.Routable.Services;
 
 namespace WebAdvanced.Sitemap.Services {
     [UsedImplicitly]
@@ -25,6 +23,7 @@ namespace WebAdvanced.Sitemap.Services {
         private readonly ISignals _signals;
         private readonly IClock _clock;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IEnumerable<ISitemapRouteFilter> _routeFilters;
 
         public AdvancedSitemapService(
             IRepository<SitemapRouteRecord> routeRepository, 
@@ -34,7 +33,8 @@ namespace WebAdvanced.Sitemap.Services {
             ICacheManager cacheManager,
             ISignals signals,
             IClock clock,
-            IContentDefinitionManager contentDefinitionManager) {
+            IContentDefinitionManager contentDefinitionManager,
+            IEnumerable<ISitemapRouteFilter> routeFilters) {
             _routeRepository = routeRepository;
             _settingsRepository = settingsRepository;
             _customRouteRepository = customRouteRepository;
@@ -43,6 +43,7 @@ namespace WebAdvanced.Sitemap.Services {
             _signals = signals;
             _clock = clock;
             _contentDefinitionManager = contentDefinitionManager;
+            _routeFilters = routeFilters;
         }
 
         public void SetIndexSettings(IEnumerable<IndexSettingsModel> settings) {
@@ -76,8 +77,7 @@ namespace WebAdvanced.Sitemap.Services {
 
                     var contentTypes = _contentDefinitionManager.ListTypeDefinitions()
                         .Where(ctd => 
-                            ctd.Settings.GetModel<ContentTypeSettings>().Creatable &&
-                            ctd.Parts.Where(p => p.PartDefinition.Name == "RoutePart").FirstOrDefault() != null)
+                            ctd.Parts.FirstOrDefault(p => p.PartDefinition.Name == "RoutePart") != null)
                         .ToList();
 
                     // Delete everything that no longer corresponds to these allowed content types
@@ -111,8 +111,6 @@ namespace WebAdvanced.Sitemap.Services {
                         };
                         contentSettings.Add(model);
                     }
-
-                    // TODO: Get custom route settings
 
                     return contentSettings;
                 });
@@ -179,11 +177,6 @@ namespace WebAdvanced.Sitemap.Services {
                 _signals.Trigger("WebAdvanced.Sitemap.CustomRoutes");
             }
         }
-    
-
-        private IEnumerable<string> GetActiveXmlContentTypes() {
-            return _settingsRepository.Fetch(q => q.IndexForXml).Select(s => s.ContentType).ToList();
-        }
 
         private IEnumerable<string> GetActiveDisplayContentTypes() {
             return GetIndexSettings().Where(q => q.IndexForDisplay).Select(q => q.Name).ToList();
@@ -194,16 +187,20 @@ namespace WebAdvanced.Sitemap.Services {
                 ctx => {
                     ctx.Monitor(_signals.When("WebAdvanced.Sitemap.Refresh"));
                     var slugs = new Dictionary<string, string>(); // slug => Title (if available)
-                    
+
                     // Get all active content types
                     var types = GetActiveDisplayContentTypes();
                     if (types.Any()) {
                         var contents = _contentManager.Query(VersionOptions.Published, types.ToArray()).List();
 
                         // Get all base paths
-
                         foreach (var item in contents) {
                             var routable = item.As<IRoutableAspect>();
+                            
+                            // Invoke any available url filters
+                            if (!_routeFilters.All(filter => filter.AllowUrl(routable.Path)))
+                                continue;
+
                             var slugParts = routable.Path.Trim('/').Split('/');
                             if (slugParts.Count() == 1) {
                                 slugs[slugParts[0]] = item.As<IRoutableAspect>().Title;
@@ -288,6 +285,11 @@ namespace WebAdvanced.Sitemap.Services {
                 var sitemap = new SitemapNode("Root", null);
 
                 foreach (var item in contents) {
+                    // Invoke any available URL filters
+                    if (!_routeFilters.All(filter => filter.AllowUrl(item.As<IRoutableAspect>().Path))) {
+                        continue;
+                    }
+
                     var slugs = item.As<IRoutableAspect>().Path.Split('/').ToArray();
                     var route = routes.ContainsKey(slugs[0]) ? routes[slugs[0]] : null;
 
