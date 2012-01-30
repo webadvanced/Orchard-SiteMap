@@ -24,7 +24,7 @@
     $("#save").click(function (e) {
         // Fix all the custom route names.
         $("#custom-routes tr").each(function (i, e) {
-            $(e).find("input, select").each(function (fi, fe) {
+            $(e).find("input, select").each(function(fi, fe) {
                 $(fe).attr("name", "CustomRoutes[" + i + "]." + $(fe).attr("name").replace("route.", ""));
             });
         });

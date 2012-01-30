@@ -81,6 +81,7 @@
     <Compile Include="Models\SitemapCustomRouteRecord.cs" />
     <Compile Include="Models\SitemapRouteRecord.cs" />
     <Compile Include="Models\SitemapSettingsRecord.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Services\ISitemapRouteFilter.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\AdvancedSitemapService.cs" />

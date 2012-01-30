@@ -138,6 +138,12 @@ namespace WebAdvanced.Sitemap.Services {
             var existingRouteIds = new List<int>();
 
             foreach (var model in routes) {
+                // Throw out empty urls
+                if (String.IsNullOrEmpty(model.Url))
+                    continue;
+                if (model.Url.Trim() == String.Empty)
+                    continue;
+
                 var customRouteModel = model;
                 var record = _customRouteRepository.Fetch(q => q.Url == customRouteModel.Url).FirstOrDefault();
                 if (record == null) {

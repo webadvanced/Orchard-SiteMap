@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Settings;
@@ -16,10 +17,8 @@ using WebAdvanced.Sitemap.ViewModels;
 
 namespace WebAdvanced.Sitemap.Controllers {
     public class AdminController : Controller {
-        private readonly IContentManager _contentManager;
-        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IAdvancedSitemapService _sitemapService;
-        private readonly INotifier _notifier;
+        private readonly IOrchardServices _services;
 
         public dynamic Shape { get; set; }
 
@@ -30,16 +29,18 @@ namespace WebAdvanced.Sitemap.Controllers {
             IContentDefinitionManager contentDefinitionManager,
             IAdvancedSitemapService sitemapService,
             IShapeFactory shapeFactory,
-            INotifier notifier) {
-            _contentManager = contentManager;
-            _contentDefinitionManager = contentDefinitionManager;
+            INotifier notifier,
+            IOrchardServices services) {
             _sitemapService = sitemapService;
-            _notifier = notifier;
+            _services = services;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
         public ActionResult Indexing() {
+            if (!_services.Authorizer.Authorize(Permissions.ManageSitemap, T("Not allowed to manage sitemap")))
+                return new HttpUnauthorizedResult();
+
             var typeSettings = _sitemapService.GetIndexSettings();
             var customRoutes = _sitemapService.GetCustomRoutes();
 
@@ -53,16 +54,22 @@ namespace WebAdvanced.Sitemap.Controllers {
 
         [HttpPost]
         public ActionResult Indexing(IndexingPageModel model) {
+            if (!_services.Authorizer.Authorize(Permissions.ManageSitemap, T("Not allowed to manage sitemap")))
+                return new HttpUnauthorizedResult();
+
             _sitemapService.SetIndexSettings(model.ContentTypeSettings);
             if (model.CustomRoutes != null) {
                 _sitemapService.SetCustomRoutes(model.CustomRoutes);
             }
 
-            _notifier.Add(NotifyType.Information, T("Saved Sitemap indexing settings"));
+            _services.Notifier.Add(NotifyType.Information, T("Saved Sitemap indexing settings"));
             return RedirectToAction("Indexing");
         }
 
         public ActionResult DisplaySettings() {
+            if (!_services.Authorizer.Authorize(Permissions.ManageSitemap, T("Not allowed to manage sitemap")))
+                return new HttpUnauthorizedResult();
+
             var routes = _sitemapService.GetRoutes();
             var model = new DisplaySettingsPageModel {
                 AutoLayout = false,
@@ -73,17 +80,12 @@ namespace WebAdvanced.Sitemap.Controllers {
 
         [HttpPost]
         public ActionResult DisplaySettings(DisplaySettingsPageModel model) {
-            _sitemapService.SetRoutes(model.Routes);
-            _notifier.Add(NotifyType.Information, T("Saved Sitemap display layout"));
-            return RedirectToAction("DisplaySettings");
-        }
+            if (!_services.Authorizer.Authorize(Permissions.ManageSitemap, T("Not allowed to manage sitemap")))
+                return new HttpUnauthorizedResult();
 
-        public ActionResult DeleteCustomRoute(string url, string returnUrl = null) {
-            _sitemapService.DeleteCustomRoute(url);
-            if (returnUrl == null) {
-                return Content("");
-            }
-            return Redirect(returnUrl);
+            _sitemapService.SetRoutes(model.Routes);
+            _services.Notifier.Add(NotifyType.Information, T("Saved Sitemap display layout"));
+            return RedirectToAction("DisplaySettings");
         }
 
         public ActionResult GetNewCustomRouteForm() {
