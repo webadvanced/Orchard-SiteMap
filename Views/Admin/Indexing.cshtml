@@ -1,0 +1,49 @@
+﻿@model WebAdvanced.Sitemap.ViewModels.IndexingPageModel
+@{
+    Style.Include("WebAdvanced.Sitemap.Admin.css");
+    Script.Include("admin.indexsettings.js");
+    Layout.Title = T("Sitemap Indexing Settings").ToString();
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    <legend>Content Type Settings</legend>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>Content Type</th>
+                <th class="center">Index for display</th>
+                <th class="center">Index for XML</th>
+                <th>Priority</th>
+                <th>Update Frequency</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ContentTypeSettings.Count(); i++) {
+                @Html.EditorFor(m => Model.ContentTypeSettings[i])
+            }
+        </tbody>
+    </table>
+    <legend>Custom Routes</legend>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>Url</th>
+                <th class="center">Index for display</th>
+                <th class="center">Index for XML</th>
+                <th>Priority</th>
+                <th>Update Frequency</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody id="custom-routes">
+        @if(Model.CustomRoutes != null) {
+            foreach (var route in Model.CustomRoutes) {
+                @Html.EditorFor(m => route)
+            }
+        }
+        </tbody>
+    </table>
+    <fieldset>
+        <button id="addroute" class="primaryAction">Add Custom Route</button>
+        <button id="save" type="submit" class="primaryAction">Save</button>
+    </fieldset>
+}

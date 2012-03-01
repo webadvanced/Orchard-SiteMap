@@ -1,0 +1,12 @@
+Name: Advanced Sitemap
+AntiForgery: enabled
+Author: WebAdvanced
+Website: https://github.com/webadvanced/Orchard-SiteMap/wiki
+Version: 1.2
+OrchardVersion: 1.3
+Description: Provides a highly configurable XML and HTML sitemap.
+Features:
+    WebAdvanced.Sitemap:
+        Description: Provides a highly configurable XML and HTML sitemap.
+	Name: Advanced Sitemap
+	Category: Navigation

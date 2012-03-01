@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{83C6A228-B496-4206-A593-D0B46FC9AA7D}</ProjectGuid>
+    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebAdvanced.Sitemap</RootNamespace>
+    <AssemblyName>WebAdvanced.Sitemap</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\admin.indexsettings.js" />
+    <Content Include="Scripts\jquery-ui-1.8.17.custom.min.js" />
+    <Content Include="Scripts\admin.displaysettings.js" />
+    <Content Include="Styles\plus-minus.png" />
+    <Content Include="Styles\WebAdvanced.Sitemap.Admin.css" />
+    <Content Include="Styles\WebAdvanced.Sitemap.Display.css" />
+    <Content Include="Web.config" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\XmlResult.cs" />
+    <Compile Include="Handlers\SitemapContentHandler.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\SitemapCustomRouteRecord.cs" />
+    <Compile Include="Models\SitemapRoute.cs" />
+    <Compile Include="Models\SitemapRouteRecord.cs" />
+    <Compile Include="Models\SitemapSettingsRecord.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Services\ISitemapRouteFilter.cs" />
+    <Compile Include="Providers\Impl\ContentRouteProvider.cs" />
+    <Compile Include="Providers\Impl\CustomRouteProvider.cs" />
+    <Compile Include="Providers\ISitemapRouteProvider.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Services\AdvancedSitemapService.cs" />
+    <Compile Include="Models\SitemapNode.cs" />
+    <Compile Include="Services\IAdvancedSitemapService.cs" />
+    <Compile Include="ViewModels\CustomRouteModel.cs" />
+    <Compile Include="ViewModels\IndexingPageModel.cs" />
+    <Compile Include="ViewModels\IndexSettingsModel.cs" />
+    <Compile Include="ViewModels\RouteSettingsModel.cs" />
+    <Compile Include="ViewModels\DisplaySettingsPageModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\Admin\Indexing.cshtml" />
+    <None Include="Views\Admin\DisplaySettings.cshtml" />
+    <None Include="Views\EditorTemplates\CustomRouteModel.cshtml" />
+    <None Include="Views\EditorTemplates\IndexSettingsModel.cshtml" />
+    <None Include="Views\DisplayTemplates\RouteSettingsModel.cshtml" />
+    <None Include="Views\Admin\PartialCustomRouteEditor.cshtml" />
+    <None Include="Views\Sitemap.Column.cshtml" />
+    <None Include="Views\Sitemap.Group.cshtml" />
+    <None Include="Views\Sitemap.Index.cshtml" />
+    <None Include="Views\Sitemap.Node.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Shared\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Tools\Orchard\Orchard.csproj">
+      <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
+      <Name>Orchard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)*.*" "$(SolutionDir)Orchard\Modules\$(TargetName)\" /e /y /i /r</PostBuildEvent>
+  </PropertyGroup>
+</Project>
