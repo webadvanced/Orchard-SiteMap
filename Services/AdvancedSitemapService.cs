@@ -6,7 +6,6 @@ using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.Services;
 using WebAdvanced.Sitemap.Models;
@@ -81,8 +80,7 @@ namespace WebAdvanced.Sitemap.Services {
                     ctx.Monitor(_signals.When("WebAdvanced.Sitemap.IndexSettings"));
 
                     var contentTypes = _contentDefinitionManager.ListTypeDefinitions()
-                        .Where(ctd => 
-                            ctd.Parts.FirstOrDefault(p => p.PartDefinition.Name == "RoutePart") != null)
+                        .Where(ctd => ctd.Parts.FirstOrDefault(p => p.PartDefinition.Name == "AutoroutePart") != null)
                         .ToList();
 
                     // Delete everything that no longer corresponds to these allowed content types

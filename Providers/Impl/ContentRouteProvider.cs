@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
@@ -35,7 +36,7 @@ namespace WebAdvanced.Sitemap.Providers.Impl {
                     Priority = types[c.ContentType].Priority,
                     Title = _contentManager.GetItemMetadata(c).DisplayText,
                     UpdateFrequency = types[c.ContentType].UpdateFrequency,
-                    Url = c.As<IRoutableAspect>().Path
+                    Url = c.As<AutoroutePart>().Path
                 }).AsEnumerable();
             }
 
@@ -57,7 +58,7 @@ namespace WebAdvanced.Sitemap.Providers.Impl {
                     Priority = types[c.ContentType].Priority,
                     Title = _contentManager.GetItemMetadata(c).DisplayText,
                     UpdateFrequency = types[c.ContentType].UpdateFrequency,
-                    Url = c.As<IRoutableAspect>().Path,
+                    Url = c.As<AutoroutePart>().Path,
                     LastUpdated = c.Has<CommonPart>() ? c.As<CommonPart>().ModifiedUtc : null
                 }).AsEnumerable();
             }

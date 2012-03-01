@@ -8,7 +8,6 @@ using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Mvc;
 using Orchard.Services;
