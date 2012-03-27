@@ -154,6 +154,7 @@
   </Target>
   <ProjectExtensions />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)*.*" "$(SolutionDir)Orchard\Modules\$(TargetName)\" /e /y /i /r</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

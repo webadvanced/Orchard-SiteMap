@@ -18,12 +18,11 @@ namespace WebAdvanced.Sitemap.Handlers {
             _signals = signals;
             _sitemapService = sitemapService;
 
-            var activeContentTypes = _sitemapService.GetIndexSettings()
-                .Where(m => m.IndexForDisplay || m.IndexForXml)
-                .Select(m => m.Name)
-                .ToList();
-
             OnPublished<ContentItem>((ctx, item) => {
+                var activeContentTypes = _sitemapService.GetIndexSettings()
+                    .Where(m => m.IndexForDisplay || m.IndexForXml)
+                    .Select(m => m.Name)
+                    .ToList();
                 if (activeContentTypes.Contains(ctx.ContentItem.ContentType)) {
                     _signals.Trigger("WebAdvanced.Sitemap.Refresh");
                 }
