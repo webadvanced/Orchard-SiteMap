@@ -20,8 +20,9 @@ namespace WebAdvanced.Sitemap.Controllers {
             // https://bugzilla.mozilla.org/show_bug.cgi?id=256379
             context.HttpContext.Response.ContentType = "text/xml";
 
-            using (var writer = XmlWriter.Create(context.HttpContext.Response.Output))
+            using (var writer = XmlWriter.Create(context.HttpContext.Response.Output)) {
                 Document.WriteTo(writer);
+            }
         }
     }
 }

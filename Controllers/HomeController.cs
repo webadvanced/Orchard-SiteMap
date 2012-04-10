@@ -50,9 +50,10 @@ namespace WebAdvanced.Sitemap.Controllers {
             var doc = _cacheManager.Get("sitemap.xml", ctx => {
                 ctx.Monitor(_clock.When(TimeSpan.FromDays(1.0)));
 
-                var ns = XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9");
-                var document = new XDocument();
-                var urlset = new XElement(ns + "urlset");
+                XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
+
+                var document = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+                var urlset = new XElement(xmlns + "urlset");
                 document.Add(urlset);
 
                 var rootUrl = GetRootPath();
@@ -72,14 +73,13 @@ namespace WebAdvanced.Sitemap.Controllers {
                         routeUrls.Add(item.Url);
 
                         var url = rootUrl + item.Url.TrimStart('/');
-                        var element = new XElement("url");
-                        element.Add(new XElement("loc", url));
-                        element.Add(new XElement("priority",
-                            (item.Priority - 1)/4.0).ToString());
-                        element.Add(new XElement("changefreq", item.UpdateFrequency));
+                        var element = new XElement(xmlns + "url");
+                        element.Add(new XElement(xmlns + "loc", url));
+                        element.Add(new XElement(xmlns + "changefreq", item.UpdateFrequency));
                         if (item.LastUpdated.HasValue) {
-                            element.Add(new XElement("lastmod", item.LastUpdated.Value.ToString("yyyy-MM-dd")));
+                            element.Add(new XElement(xmlns + "lastmod", item.LastUpdated.Value.ToString("yyyy-MM-dd")));
                         }
+                        element.Add(new XElement(xmlns + "priority", (item.Priority - 1) / 4.0));
                         urlset.Add(element);
                     }
                 }
