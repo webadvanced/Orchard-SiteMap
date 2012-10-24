@@ -83,8 +83,10 @@ namespace WebAdvanced.Sitemap.Services {
                         .Where(ctd => ctd.Parts.FirstOrDefault(p => p.PartDefinition.Name == "AutoroutePart") != null)
                         .ToList();
 
+                    var typeNames = contentTypes.Select(t => t.Name).ToArray();
+
                     // Delete everything that no longer corresponds to these allowed content types
-                    var toDelete = _settingsRepository.Fetch(q => !contentTypes.Exists(p => p.Name == q.ContentType)).ToList();
+                    var toDelete = _settingsRepository.Fetch(q => !typeNames.Contains(q.ContentType)).ToList();
                     foreach (var record in toDelete) {
                         _settingsRepository.Delete(record);
                     }

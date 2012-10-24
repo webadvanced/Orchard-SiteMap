@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Orchard;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Settings;
@@ -18,7 +19,9 @@ using WebAdvanced.Sitemap.ViewModels;
 namespace WebAdvanced.Sitemap.Controllers {
     public class AdminController : Controller {
         private readonly IAdvancedSitemapService _sitemapService;
+        private readonly INotifier _notifier;
         private readonly IOrchardServices _services;
+        private readonly ISignals _signals;
 
         public dynamic Shape { get; set; }
 
@@ -30,9 +33,12 @@ namespace WebAdvanced.Sitemap.Controllers {
             IAdvancedSitemapService sitemapService,
             IShapeFactory shapeFactory,
             INotifier notifier,
-            IOrchardServices services) {
+            IOrchardServices services,
+            ISignals signals) {
             _sitemapService = sitemapService;
+            _notifier = notifier;
             _services = services;
+            _signals = signals;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
@@ -100,6 +106,16 @@ namespace WebAdvanced.Sitemap.Controllers {
                 Url = string.Empty
             };
             return PartialView("PartialCustomRouteEditor", emptyModel);
+        }
+
+        public ActionResult RefreshXmlCache() {
+            _signals.Trigger("WebAdvanced.Sitemap.XmlRefresh");
+            _notifier.Add(NotifyType.Information, T("XML sitemap cache cleared"));
+            return RedirectToAction("Indexing");
+        }
+
+        public ActionResult Cache() {
+            return View();
         }
     }
 }

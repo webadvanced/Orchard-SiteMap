@@ -25,6 +25,7 @@ namespace WebAdvanced.Sitemap.Controllers {
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<ISitemapRouteFilter> _routeFilters;
         private readonly IEnumerable<ISitemapRouteProvider> _routeProviders;
+        private readonly ISignals _signals;
 
         public dynamic Shape { get; set; }
 
@@ -35,20 +36,23 @@ namespace WebAdvanced.Sitemap.Controllers {
             IClock clock,
             IContentManager contentManager,
             IEnumerable<ISitemapRouteFilter> routeFilters,
-            IEnumerable<ISitemapRouteProvider> routeProviders) {
+            IEnumerable<ISitemapRouteProvider> routeProviders,
+            ISignals signals) {
             _sitemapService = sitemapService;
             _cacheManager = cacheManager;
             _clock = clock;
             _contentManager = contentManager;
             _routeFilters = routeFilters;
             _routeProviders = routeProviders;
+            _signals = signals;
 
             Shape = shapeFactory;
         }
 
         public ActionResult Xml() {
             var doc = _cacheManager.Get("sitemap.xml", ctx => {
-                ctx.Monitor(_clock.When(TimeSpan.FromDays(1.0)));
+                ctx.Monitor(_clock.When(TimeSpan.FromHours(1.0)));
+                ctx.Monitor(_signals.When("WebAdvanced.Sitemap.XmlRefresh"));
 
                 XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
