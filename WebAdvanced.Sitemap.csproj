@@ -63,8 +63,14 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -112,17 +118,17 @@
     <Compile Include="ViewModels\DisplaySettingsPageModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Admin\Cache.cshtml" />
-    <None Include="Views\Admin\Indexing.cshtml" />
-    <None Include="Views\Admin\DisplaySettings.cshtml" />
-    <None Include="Views\EditorTemplates\CustomRouteModel.cshtml" />
-    <None Include="Views\EditorTemplates\IndexSettingsModel.cshtml" />
-    <None Include="Views\DisplayTemplates\RouteSettingsModel.cshtml" />
-    <None Include="Views\Admin\PartialCustomRouteEditor.cshtml" />
-    <None Include="Views\Sitemap.Column.cshtml" />
-    <None Include="Views\Sitemap.Group.cshtml" />
-    <None Include="Views\Sitemap.Index.cshtml" />
-    <None Include="Views\Sitemap.Node.cshtml" />
+    <Content Include="Views\Admin\Cache.cshtml" />
+    <Content Include="Views\Admin\Indexing.cshtml" />
+    <Content Include="Views\Admin\DisplaySettings.cshtml" />
+    <Content Include="Views\EditorTemplates\CustomRouteModel.cshtml" />
+    <Content Include="Views\EditorTemplates\IndexSettingsModel.cshtml" />
+    <Content Include="Views\DisplayTemplates\RouteSettingsModel.cshtml" />
+    <Content Include="Views\Admin\PartialCustomRouteEditor.cshtml" />
+    <Content Include="Views\Sitemap.Column.cshtml" />
+    <Content Include="Views\Sitemap.Group.cshtml" />
+    <Content Include="Views\Sitemap.Index.cshtml" />
+    <Content Include="Views\Sitemap.Node.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\" />

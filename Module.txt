@@ -10,3 +10,4 @@ Features:
         Description: Provides a highly configurable XML and HTML sitemap.
 		Name: Advanced Sitemap
 		Category: Navigation
+        Dependencies: Orchard.jQuery
