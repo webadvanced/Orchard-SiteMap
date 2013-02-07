@@ -2,6 +2,9 @@
     // Add a new route form to the screen
     var url = window.location.toString().replace("Indexing", "");
     $("#addroute").click(function (e) {
+        url = url.replace('indexing/', '');
+        url = url.replace('indexing', '');
+
         $.ajax({
             url: url + "GetCustomRouteForm",
             success: function (data) {
