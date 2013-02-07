@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.Caching;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Contents.Settings;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc;
 using Orchard.UI.Notify;
-using WebAdvanced.Sitemap.Models;
 using WebAdvanced.Sitemap.Services;
 using WebAdvanced.Sitemap.ViewModels;
 
@@ -28,8 +22,6 @@ namespace WebAdvanced.Sitemap.Controllers {
         public Localizer T { get; set; }
 
         public AdminController(
-            IContentManager contentManager,
-            IContentDefinitionManager contentDefinitionManager,
             IAdvancedSitemapService sitemapService,
             IShapeFactory shapeFactory,
             INotifier notifier,
@@ -108,9 +100,10 @@ namespace WebAdvanced.Sitemap.Controllers {
             return PartialView("PartialCustomRouteEditor", emptyModel);
         }
 
-        public ActionResult RefreshXmlCache() {
+        public ActionResult RefreshCache() {
             _signals.Trigger("WebAdvanced.Sitemap.XmlRefresh");
-            _notifier.Add(NotifyType.Information, T("XML sitemap cache cleared"));
+            _signals.Trigger("WebAdvanced.Sitemap.Refresh");
+            _notifier.Add(NotifyType.Information, T("Sitemap cache cleared"));
             return RedirectToAction("Indexing");
         }
 

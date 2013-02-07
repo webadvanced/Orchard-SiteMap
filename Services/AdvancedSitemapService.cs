@@ -297,11 +297,17 @@ namespace WebAdvanced.Sitemap.Services {
                         int i = 0;
                         SitemapNode currentNode = sitemap;
                         while (i < slugs.Length) {
+                            var isLeaf = i == slugs.Length - 1;
+                            string name = isLeaf ? item.Title : slugs[i].SlugToTitle();
+                            string url = isLeaf ? item.Url : null;
                             if (!currentNode.Children.ContainsKey(slugs[i])) {
-                                var isLeaf = i == slugs.Length - 1;
-                                string name = isLeaf ? item.Title : slugs[i].SlugToTitle();
-                                string url = isLeaf ? item.Url : null;
                                 currentNode.Children.Add(slugs[i], new SitemapNode(name, url));
+                            }
+                            else if (!string.IsNullOrEmpty(currentNode.Children[slugs[i]].Url))
+                            {
+                                // TODO: A better way to tell whether to overwrite a previous node?
+                                currentNode.Children[slugs[i]].Url = url;
+                                currentNode.Children[slugs[i]].Title = name;
                             }
                             currentNode = currentNode.Children[slugs[i]];
                             i++;
