@@ -83,7 +83,10 @@ namespace WebAdvanced.Sitemap.Controllers {
                         if (item.LastUpdated.HasValue) {
                             element.Add(new XElement(xmlns + "lastmod", item.LastUpdated.Value.ToString("yyyy-MM-dd")));
                         }
-                        element.Add(new XElement(xmlns + "priority", (item.Priority - 1) / 4.0));
+                        var priority = (item.Priority - 1) / 4.0;
+                        if (priority >= 0.0 && priority <= 1.0) {
+                            element.Add(new XElement(xmlns + "priority", (item.Priority - 1) / 4.0));
+                        }
                         urlset.Add(element);
                     }
                 }
