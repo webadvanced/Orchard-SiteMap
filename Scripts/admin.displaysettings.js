@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     $(".column, .disabled-items").sortable({
-        connectWith: ".column, .disabled-items"
+        connectWith: ".column, .disabled-items",
+        items: ".portlet"
     });
 
     $(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix");

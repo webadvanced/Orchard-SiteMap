@@ -78,8 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\admin.indexsettings.js" />
-    <Content Include="Scripts\jquery-ui-1.8.17.custom.min.js" />
     <Content Include="Scripts\admin.displaysettings.js" />
+    <Content Include="Scripts\jquery-ui-1.10.0.custom.min.js" />
     <Content Include="Styles\plus-minus.png" />
     <Content Include="Styles\WebAdvanced.Sitemap.Admin.css" />
     <Content Include="Styles\WebAdvanced.Sitemap.Display.css" />

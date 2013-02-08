@@ -1,6 +1,6 @@
 ﻿@model WebAdvanced.Sitemap.ViewModels.DisplaySettingsPageModel
 @{
-    Script.Include("jquery-ui-1.8.17.custom.min.js");
+    Script.Include("jquery-ui-1.10.0.custom.min.js");
     Script.Include("admin.displaysettings.js");
     Style.Include("WebAdvanced.Sitemap.Admin.css");
     
@@ -29,19 +29,22 @@
         <legend>Active Routes</legend>
         <div class="sitemap-layout group">
             <div id="col-1" class="column">
-            @foreach (var item in colItems1) {
-                @Html.DisplayFor(m => item, new { enabled = true })
-            }
+                <div class="column-header">Column 1</div>
+                @foreach (var item in colItems1) {
+                    @Html.DisplayFor(m => item, new { enabled = true })
+                }
             </div>
             <div id="col-2" class="column">
-            @foreach (var item in colItems2) {
-                @Html.DisplayFor(m => item, new { enabled = true })
-            }
+                <div class="column-header">Column 1</div>
+                @foreach (var item in colItems2) {
+                    @Html.DisplayFor(m => item, new { enabled = true })
+                }
             </div>
             <div id="col-3" class="column">
-            @foreach (var item in colItems3) {
-                @Html.DisplayFor(m => item, new { enabled = true })
-            }
+                <div class="column-header">Column 1</div>
+                @foreach (var item in colItems3) {
+                    @Html.DisplayFor(m => item, new { enabled = true })
+                }
             </div>
         </div>
     </fieldset>

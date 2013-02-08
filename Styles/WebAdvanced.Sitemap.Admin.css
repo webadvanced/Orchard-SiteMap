@@ -1,34 +1,36 @@
 ﻿table.items td.center, table.items th.center { text-align: center;}
 #custom-routes td span { margin-right: 4px; }
 .disabled-items {min-height:60px;}
-.sitemap-layout .column {float:left; padding-bottom:50px; min-width:217px;}
-.portlet {margin:0 1em 1em 0; cursor:move; padding:1px; width:200px;}
-.disabled-items .portlet {float:left;}
-
-.levels-controls { float: right; }
-.levels-decrease a, .levels-increase a {
-    width: 9px;
-    height: 9px;
-    background: url("plus-minus.png") no-repeat;
-    background-position: 0px 0px;
-    float: left;
-    text-indent: -9999;
-    overflow: hidden;
-    margin: 7px 4px 0px 4px;
-}
-.levels-increase a { background-position: 0px -9px;float: right;}
-.levels-decrease a:hover{background-position: -9px 0px;}
-.levels-increase a:hover{background-position: -9px -9px;}
-
-
+.sitemap-layout .column {float:left; padding-bottom:50px; min-width:205px;margin-right: 1em;}
+.portlet {margin:0 0 1em 0; cursor:move; padding:1px; width:200px;}
+.disabled-items .portlet {float:left;margin-right: 1em;}
 
 .portlet .titlebar {background-color:#323232; color:#FFF;}
 .portlet .titlebar .title {padding:6px 0 6px 6px;}
 
-.display-levels-container {float:right;padding:5px;}
-.display-levels-container label {font-size:0.9em;color:#999;display:inline;}
-.display-levels-container {float:right;}
-.levels-display {font-size:1.3em;}
+.column .column-header { background-color: #e4e5e6;text-align: center;color: #333333;font-size: 1.3em;margin-bottom: 0.5em; padding:5px}
+
+/* Levels controls */
+.display-levels-container {float:right;padding:5px;position:relative;}
+.display-levels-container label {font-size:0.9em;color:#999;display:inline;padding-right:60px;}
+    .levels-display {font-size: 1.3em; position: absolute; top: 6px; right: 24px;text-align: center;}
+    .levels-decrease a, .levels-increase a {
+        width: 9px;
+        height: 9px;
+        background: url("plus-minus.png") no-repeat;
+        background-position: 0px 0px;
+        float: left;
+        text-indent: -9999;
+        overflow: hidden;
+        position: absolute;
+        top: 12px;
+        right: 40px;
+    }
+    .levels-increase a { background-position: 0px -9px;right: 10px;}
+    .levels-decrease a:hover{background-position: -9px 0px;}
+    .levels-increase a:hover{background-position: -9px -9px;}
+
+
 /* jQuery UI */
 .ui-helper-hidden {
     display: none;
