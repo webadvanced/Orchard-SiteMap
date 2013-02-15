@@ -209,7 +209,7 @@ namespace WebAdvanced.Sitemap.Services {
                         // Get all base paths
                         foreach (var route in routes) {
                             var slugParts = route.Url.Trim('/').Split('/');
-                            if (slugParts.Count() == 1) {
+                            if (slugParts.Count() == 1 && !string.IsNullOrWhiteSpace(route.Title)) {
                                 slugs[slugParts[0]] = route.Title;
                             }
                             else {
@@ -298,16 +298,20 @@ namespace WebAdvanced.Sitemap.Services {
                         SitemapNode currentNode = sitemap;
                         while (i < slugs.Length) {
                             var isLeaf = i == slugs.Length - 1;
-                            string name = isLeaf ? item.Title : slugs[i].SlugToTitle();
-                            string url = isLeaf ? item.Url : null;
-                            if (!currentNode.Children.ContainsKey(slugs[i])) {
+                            if (!currentNode.Children.ContainsKey(slugs[i]))
+                            {
+                                string name = isLeaf ? item.Title : slugs[i].SlugToTitle();
+                                string url = isLeaf ? item.Url : null;
                                 currentNode.Children.Add(slugs[i], new SitemapNode(name, url));
                             }
-                            else if (!string.IsNullOrEmpty(currentNode.Children[slugs[i]].Url))
+                            else if (isLeaf) // Only replace existing items if the current is a leaf
                             {
-                                // TODO: A better way to tell whether to overwrite a previous node?
-                                currentNode.Children[slugs[i]].Url = url;
-                                currentNode.Children[slugs[i]].Title = name;
+                                currentNode.Children[slugs[i]].Url = item.Url;
+                                // Keep current title if the over-riding one is empty  when a custom route is over-riding a content route
+                                if (!string.IsNullOrWhiteSpace(item.Title)) 
+                                {
+                                    currentNode.Children[slugs[i]].Title = item.Title; 
+                                }
                             }
                             currentNode = currentNode.Children[slugs[i]];
                             i++;
