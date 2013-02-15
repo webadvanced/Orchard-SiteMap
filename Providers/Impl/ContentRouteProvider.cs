@@ -65,5 +65,8 @@ namespace WebAdvanced.Sitemap.Providers.Impl {
 
             return new List<SitemapRoute>();
         }
+        
+        public int SequenceNumber { get { return 20; } }
+        
     }
 }
