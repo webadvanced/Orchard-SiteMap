@@ -144,11 +144,11 @@ namespace WebAdvanced.Sitemap.Services {
             var existingRouteIds = new List<int>();
 
             foreach (var model in routes) {
-                // Throw out empty urls
-                if (String.IsNullOrEmpty(model.Url))
-                    continue;
-                if (model.Url.Trim() == String.Empty)
-                    continue;
+                // Treat empty url as over-ride for root path
+                if (string.IsNullOrWhiteSpace(model.Url))
+                {
+                    model.Url = string.Empty;
+                }
 
                 var customRouteModel = model;
                 var record = _customRouteRepository.Fetch(q => q.Url == customRouteModel.Url).FirstOrDefault();
