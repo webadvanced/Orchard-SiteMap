@@ -9,5 +9,6 @@ namespace WebAdvanced.Sitemap.Providers {
     public interface ISitemapRouteProvider : IDependency {
         IEnumerable<SitemapRoute> GetDisplayRoutes();
         IEnumerable<SitemapRoute> GetXmlRoutes();
+        int SequenceNumber { get; }
     }
 }
