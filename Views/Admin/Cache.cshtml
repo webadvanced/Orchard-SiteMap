@@ -1,7 +1,7 @@
-﻿@{
+@{
     Layout.Title = T("Sitemap Cache").ToString();
 }
-@using(Html.BeginFormAntiForgeryPost("RefreshXmlCache", FormMethod.Get)) {
+@using(Html.BeginFormAntiForgeryPost("RefreshCache", FormMethod.Get)) {
     <legend>Reset Cache</legend>
     <p>The XML sitemap is normally cached on an hourly basis. The sitemap display and settings are cached until content updates. Click the button below to force a cache reset.</p>
     <fieldset>
