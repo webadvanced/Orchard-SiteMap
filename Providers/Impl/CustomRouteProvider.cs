@@ -29,5 +29,8 @@ namespace WebAdvanced.Sitemap.Providers.Impl {
                     UpdateFrequency = r.UpdateFrequency})
                 .AsEnumerable();
         }
+        
+        public int SequenceNumber { get { return 10; } }
+        
     }
 }

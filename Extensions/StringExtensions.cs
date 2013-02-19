@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace WebAdvanced.Sitemap.Extensions {
@@ -9,6 +9,10 @@ namespace WebAdvanced.Sitemap.Extensions {
         }
 
         public static string SlugToTitle(this string slug) {
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                return string.Empty;
+            }
             var parts = slug.Split('-');
             return String.Join(" ", parts.Select(p => {
                 char[] a = p.ToCharArray();
