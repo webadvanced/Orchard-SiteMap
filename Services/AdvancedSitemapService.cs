@@ -145,8 +145,7 @@ namespace WebAdvanced.Sitemap.Services {
 
             foreach (var model in routes) {
                 // Treat empty url as over-ride for root path
-                if (string.IsNullOrWhiteSpace(model.Url))
-                {
+                if (string.IsNullOrWhiteSpace(model.Url)) {
                     model.Url = string.Empty;
                 }
 
@@ -268,8 +267,6 @@ namespace WebAdvanced.Sitemap.Services {
         }
 
         public SitemapNode GetSitemapRoot() {
-            var activeTypes = GetActiveDisplayContentTypes();
-
             // Create dictionary indexed by routes
             var routeSettings = GetRoutes().ToDictionary(
                 k => k.Slug,
@@ -280,7 +277,7 @@ namespace WebAdvanced.Sitemap.Services {
                 
                 var sitemap = new SitemapNode("Root", null);
 
-                foreach (var provider in _routeProviders) {
+                foreach (var provider in _routeProviders.OrderByDescending(p => p.Priority)) {
                     var validRoutes = provider.GetDisplayRoutes()
                         .Where(r => _routeFilters.All(filter => filter.AllowUrl(r.Url)))
                         .AsEnumerable();
@@ -298,18 +295,15 @@ namespace WebAdvanced.Sitemap.Services {
                         SitemapNode currentNode = sitemap;
                         while (i < slugs.Length) {
                             var isLeaf = i == slugs.Length - 1;
-                            if (!currentNode.Children.ContainsKey(slugs[i]))
-                            {
+                            if (!currentNode.Children.ContainsKey(slugs[i])) {
                                 string name = isLeaf ? item.Title : slugs[i].SlugToTitle();
                                 string url = isLeaf ? item.Url : null;
                                 currentNode.Children.Add(slugs[i], new SitemapNode(name, url));
-                            }
-                            else if (isLeaf) // Only replace existing items if the current is a leaf
-                            {
+                            } 
+                            else if (isLeaf) { // Only replace existing items if the current is a leaf 
                                 currentNode.Children[slugs[i]].Url = item.Url;
                                 // Keep current title if the over-riding one is empty  when a custom route is over-riding a content route
-                                if (!string.IsNullOrWhiteSpace(item.Title)) 
-                                {
+                                if (!string.IsNullOrWhiteSpace(item.Title)) {
                                     currentNode.Children[slugs[i]].Title = item.Title; 
                                 }
                             }

@@ -30,7 +30,7 @@ namespace WebAdvanced.Sitemap.Providers.Impl {
                 .AsEnumerable();
         }
         
-        public int SequenceNumber { get { return 10; } }
+        public int Priority { get { return 20; } }
         
     }
 }

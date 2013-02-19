@@ -66,16 +66,14 @@ namespace WebAdvanced.Sitemap.Controllers {
                 var routeUrls = new HashSet<string>(); // Don't include the same url twice
                 var items = new List<SitemapRoute>();
 
-                // Process routes from providers in order of sequence number to allow custom routes
+                // Process routes from providers in order of high to low priority to allow custom routes
                 // to be processed first and thus override content routes.
-                foreach (var provider in _routeProviders.OrderBy(p => p.SequenceNumber)) 
-                {
+                foreach (var provider in _routeProviders.OrderByDescending(p => p.Priority)) {
                     var validRoutes = provider.GetXmlRoutes()
                         .Where(r => _routeFilters.All(filter => filter.AllowUrl(r.Url)))
                         .AsEnumerable();
 
-                    foreach (var item in validRoutes)
-                    {
+                    foreach (var item in validRoutes) {
                         if (routeUrls.Contains(item.Url))
                             continue;
 
@@ -84,19 +82,17 @@ namespace WebAdvanced.Sitemap.Controllers {
                     }
                 }
 
-                foreach (var item in items.OrderByDescending(i => i.Priority).ThenBy(i => i.Url)) // Ensure routes with higher priority are listed first
-                {
+                // Ensure routes with higher priority are listed first
+                foreach (var item in items.OrderByDescending(i => i.Priority).ThenBy(i => i.Url)) {
                     var url = rootUrl + item.Url.TrimStart('/');
                     var element = new XElement(xmlns + "url");
                     element.Add(new XElement(xmlns + "loc", url));
                     element.Add(new XElement(xmlns + "changefreq", item.UpdateFrequency));
-                    if (item.LastUpdated.HasValue)
-                    {
+                    if (item.LastUpdated.HasValue) {
                         element.Add(new XElement(xmlns + "lastmod", item.LastUpdated.Value.ToString("yyyy-MM-dd")));
                     }
                     var priority = (item.Priority - 1) / 4.0;
-                    if (priority >= 0.0 && priority <= 1.0)
-                    {
+                    if (priority >= 0.0 && priority <= 1.0) {
                         element.Add(new XElement(xmlns + "priority", (item.Priority - 1) / 4.0));
                     }
                     urlset.Add(element);
