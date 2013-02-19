@@ -97,6 +97,9 @@
     <Compile Include="Controllers\XmlResult.cs" />
     <Compile Include="Handlers\SitemapContentHandler.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ImportExport\SitemapCustomExportStep.cs" />
+    <Compile Include="ImportExport\SitemapExportEventHandler.cs" />
+    <Compile Include="ImportExport\SitemapRecipeHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\SitemapCustomRouteRecord.cs" />
     <Compile Include="Models\SitemapRoute.cs" />
