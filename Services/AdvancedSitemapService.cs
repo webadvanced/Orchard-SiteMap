@@ -207,7 +207,8 @@ namespace WebAdvanced.Sitemap.Services {
 
                         // Get all base paths
                         foreach (var route in routes) {
-                            var slugParts = route.Url.Trim('/').Split('/');
+                            var alias = route.UrlAlias ?? route.Url;
+                            var slugParts = alias.Trim('/').Split('/');
                             if (slugParts.Count() == 1 && !string.IsNullOrWhiteSpace(route.Title)) {
                                 slugs[slugParts[0]] = route.Title;
                             }
@@ -283,8 +284,8 @@ namespace WebAdvanced.Sitemap.Services {
                         .AsEnumerable();
 
                     foreach (var item in validRoutes) {
-
-                        var slugs = item.Url.Split('/').ToArray();
+                        var alias = item.UrlAlias ?? item.Url;
+                        var slugs = alias.Split('/').ToArray();
                         var routeSetting = routeSettings.ContainsKey(slugs[0]) ? routeSettings[slugs[0]] : null;
 
                         // Only add this to the sitemap if the route settings exist and accept it

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Caching;
@@ -11,6 +13,7 @@ using Orchard.Core.Common.Models;
 using Orchard.DisplayManagement;
 using Orchard.Mvc;
 using Orchard.Services;
+using Orchard.Settings;
 using Orchard.Themes;
 using WebAdvanced.Sitemap.Models;
 using WebAdvanced.Sitemap.Providers;
@@ -26,6 +29,7 @@ namespace WebAdvanced.Sitemap.Controllers {
         private readonly IEnumerable<ISitemapRouteFilter> _routeFilters;
         private readonly IEnumerable<ISitemapRouteProvider> _routeProviders;
         private readonly ISignals _signals;
+        private readonly ISiteService _siteService;
 
         public dynamic Shape { get; set; }
 
@@ -37,7 +41,8 @@ namespace WebAdvanced.Sitemap.Controllers {
             IContentManager contentManager,
             IEnumerable<ISitemapRouteFilter> routeFilters,
             IEnumerable<ISitemapRouteProvider> routeProviders,
-            ISignals signals) {
+            ISignals signals,
+            ISiteService siteService) {
             _sitemapService = sitemapService;
             _cacheManager = cacheManager;
             _clock = clock;
@@ -45,6 +50,7 @@ namespace WebAdvanced.Sitemap.Controllers {
             _routeFilters = routeFilters;
             _routeProviders = routeProviders;
             _signals = signals;
+            _siteService = siteService;
 
             Shape = shapeFactory;
         }
@@ -84,7 +90,11 @@ namespace WebAdvanced.Sitemap.Controllers {
 
                 // Ensure routes with higher priority are listed first
                 foreach (var item in items.OrderByDescending(i => i.Priority).ThenBy(i => i.Url)) {
-                    var url = rootUrl + item.Url.TrimStart('/');
+                    string url = item.Url;
+                    if (!Regex.IsMatch(item.Url, @"^\w+://.*$")) {
+                        url = rootUrl + item.Url.TrimStart('/');
+                    }
+                    
                     var element = new XElement(xmlns + "url");
                     element.Add(new XElement(xmlns + "loc", url));
                     element.Add(new XElement(xmlns + "changefreq", item.UpdateFrequency));
@@ -140,25 +150,10 @@ namespace WebAdvanced.Sitemap.Controllers {
         }
 
         private string GetRootPath() {
-            //Getting the current context of HTTP request
-            var context = HttpContext;
-
-            //Checking the current context content
-            if (context == null) return null;
-
-            //Formatting the fully qualified website url/name
-            var appPath = string.Format("{0}://{1}{2}{3}",
-                                        context.Request.Url.Scheme,
-                                        context.Request.Url.Host,
-                                        context.Request.Url.Port == 80
-                                            ? string.Empty
-                                            : ":" + context.Request.Url.Port,
-                                        context.Request.ApplicationPath);
-
-            if (!appPath.EndsWith("/"))
-                appPath += "/";
-            return appPath;
+            var baseUrl = _siteService.GetSiteSettings().BaseUrl;
+            if (!baseUrl.EndsWith("/"))
+                baseUrl += "/";
+            return baseUrl;
         }
-
     }
 }

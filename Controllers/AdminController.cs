@@ -63,6 +63,7 @@ namespace WebAdvanced.Sitemap.Controllers {
             _sitemapService.SetCustomRoutes(model.CustomRoutes);
 
             _services.Notifier.Add(NotifyType.Information, T("Saved Sitemap indexing settings"));
+            _signals.Trigger("WebAdvanced.Sitemap.Refresh");
             return RedirectToAction("Indexing");
         }
 

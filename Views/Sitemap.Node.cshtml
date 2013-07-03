@@ -1,12 +1,18 @@
-﻿@{
+﻿@using System.Text.RegularExpressions
+@{
     var hasChildren = Model.Children.Count > 0;
+}
+@functions {
+    bool IsAbsolute(string url) {
+        return Regex.IsMatch(url, @"^.+://.*$");
+    }
 }
 <li @(new MvcHtmlString(hasChildren ? "class=\"has-children\"" : ""))>
     @if (String.IsNullOrEmpty((string)Model.Url)) {
         @Model.Title
     }
     else {
-        @Html.Link((string)Model.Title, Url.Content("~/" + (string)Model.Url))
+        @Html.Link((string)Model.Title, IsAbsolute(Model.Url as string) ? (string)Model.Url : Url.Content("~/" + (string)Model.Url))
     }
 
     @if (Model.Children.Count > 0) {

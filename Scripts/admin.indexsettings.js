@@ -7,11 +7,13 @@
 
         $.ajax({
             url: url + "GetCustomRouteForm",
+            dataType: 'html',
             success: function (data) {
-                var o = $(data);
+                var o = $(jQuery.parseHTML(data));
                 o.hide();
                 $("#custom-routes").append(o);
-                o.fadeIn(600).css("display", "table-row");
+                // http://stackoverflow.com/questions/15621878/jquery-prepend-to-crash
+                $("#custom-routes tr:last-child").fadeIn(600).css("display", "table-row");
             }
         });
         e.preventDefault();
