@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using Orchard;
 using WebAdvanced.Sitemap.Models;
 using WebAdvanced.Sitemap.ViewModels;
@@ -17,5 +18,6 @@ namespace WebAdvanced.Sitemap.Services {
         void DeleteCustomRoute(string url);
 
         SitemapNode GetSitemapRoot();
+        XDocument GetSitemapDocument();
     }
 }

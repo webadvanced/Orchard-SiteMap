@@ -23,95 +23,19 @@ using WebAdvanced.Sitemap.ViewModels;
 namespace WebAdvanced.Sitemap.Controllers {
     public class HomeController : Controller {
         private readonly IAdvancedSitemapService _sitemapService;
-        private readonly ICacheManager _cacheManager;
-        private readonly IClock _clock;
-        private readonly IContentManager _contentManager;
-        private readonly IEnumerable<ISitemapRouteFilter> _routeFilters;
-        private readonly IEnumerable<ISitemapRouteProvider> _routeProviders;
-        private readonly ISignals _signals;
-        private readonly ISiteService _siteService;
 
         public dynamic Shape { get; set; }
 
         public HomeController(
             IAdvancedSitemapService sitemapService,
-            IShapeFactory shapeFactory,
-            ICacheManager cacheManager,
-            IClock clock,
-            IContentManager contentManager,
-            IEnumerable<ISitemapRouteFilter> routeFilters,
-            IEnumerable<ISitemapRouteProvider> routeProviders,
-            ISignals signals,
-            ISiteService siteService) {
+            IShapeFactory shapeFactory) {
             _sitemapService = sitemapService;
-            _cacheManager = cacheManager;
-            _clock = clock;
-            _contentManager = contentManager;
-            _routeFilters = routeFilters;
-            _routeProviders = routeProviders;
-            _signals = signals;
-            _siteService = siteService;
 
             Shape = shapeFactory;
         }
 
         public ActionResult Xml() {
-            var doc = _cacheManager.Get("sitemap.xml", ctx => {
-                ctx.Monitor(_clock.When(TimeSpan.FromHours(1.0)));
-                ctx.Monitor(_signals.When("WebAdvanced.Sitemap.XmlRefresh"));
-
-                XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
-
-                var document = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
-                var urlset = new XElement(xmlns + "urlset");
-                document.Add(urlset);
-
-                var rootUrl = GetRootPath();
-
-                // Add filtered routes
-                var routeUrls = new HashSet<string>(); // Don't include the same url twice
-                var items = new List<SitemapRoute>();
-
-                // Process routes from providers in order of high to low priority to allow custom routes
-                // to be processed first and thus override content routes.
-                foreach (var provider in _routeProviders.OrderByDescending(p => p.Priority)) {
-                    var validRoutes = provider.GetXmlRoutes()
-                        .Where(r => _routeFilters.All(filter => filter.AllowUrl(r.Url)))
-                        .AsEnumerable();
-
-                    foreach (var item in validRoutes) {
-                        if (routeUrls.Contains(item.Url))
-                            continue;
-
-                        routeUrls.Add(item.Url);
-                        items.Add(item);
-                    }
-                }
-
-                // Ensure routes with higher priority are listed first
-                foreach (var item in items.OrderByDescending(i => i.Priority).ThenBy(i => i.Url)) {
-                    string url = item.Url;
-                    if (!Regex.IsMatch(item.Url, @"^\w+://.*$")) {
-                        url = rootUrl + item.Url.TrimStart('/');
-                    }
-                    
-                    var element = new XElement(xmlns + "url");
-                    element.Add(new XElement(xmlns + "loc", url));
-                    element.Add(new XElement(xmlns + "changefreq", item.UpdateFrequency));
-                    if (item.LastUpdated.HasValue) {
-                        element.Add(new XElement(xmlns + "lastmod", item.LastUpdated.Value.ToString("yyyy-MM-dd")));
-                    }
-                    var priority = (item.Priority - 1) / 4.0;
-                    if (priority >= 0.0 && priority <= 1.0) {
-                        element.Add(new XElement(xmlns + "priority", (item.Priority - 1) / 4.0));
-                    }
-                    urlset.Add(element);
-                }
-                
-                return document;
-            });
-
-            return new XmlResult(doc);
+            return new XmlResult(_sitemapService.GetSitemapDocument());
         }
 
         [Themed]
@@ -147,13 +71,6 @@ namespace WebAdvanced.Sitemap.Controllers {
         private dynamic BuildNodeShape(SitemapNode node) {
             var childShapes = node.Children.Values.Select(BuildNodeShape).ToList();
             return Shape.Sitemap_Node(Title: node.Title, Url: node.Url, Children: childShapes);
-        }
-
-        private string GetRootPath() {
-            var baseUrl = _siteService.GetSiteSettings().BaseUrl;
-            if (!baseUrl.EndsWith("/"))
-                baseUrl += "/";
-            return baseUrl;
         }
     }
 }
