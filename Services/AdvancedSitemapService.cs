@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using JetBrains.Annotations;
@@ -30,6 +31,7 @@ namespace WebAdvanced.Sitemap.Services {
         private readonly IEnumerable<ISitemapRouteFilter> _routeFilters;
         private readonly IEnumerable<ISitemapRouteProvider> _routeProviders;
         private readonly ISiteService _siteService;
+        private readonly IEnumerable<ISpecializedSitemapProvider> _specializedSitemapProviders;
 
         public AdvancedSitemapService(
             IRepository<SitemapRouteRecord> routeRepository, 
@@ -42,7 +44,8 @@ namespace WebAdvanced.Sitemap.Services {
             IContentDefinitionManager contentDefinitionManager,
             IEnumerable<ISitemapRouteFilter> routeFilters,
             IEnumerable<ISitemapRouteProvider> routeProviders, 
-            ISiteService siteService) {
+            ISiteService siteService, 
+            IEnumerable<ISpecializedSitemapProvider> specializedSitemapProviders) {
             _routeRepository = routeRepository;
             _settingsRepository = settingsRepository;
             _customRouteRepository = customRouteRepository;
@@ -54,6 +57,7 @@ namespace WebAdvanced.Sitemap.Services {
             _routeFilters = routeFilters;
             _routeProviders = routeProviders;
             _siteService = siteService;
+            _specializedSitemapProviders = specializedSitemapProviders;
         }
 
         public void SetIndexSettings(IEnumerable<IndexSettingsModel> settings) {
@@ -345,8 +349,18 @@ namespace WebAdvanced.Sitemap.Services {
 
             XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
+            var providerContext = new DescribeSpecializedSitemapProviderContext();
+            foreach (var specializedSitemapProvider in _specializedSitemapProviders) {
+                specializedSitemapProvider.Describe(providerContext);
+            }
+
             var document = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
             var urlset = new XElement(xmlns + "urlset");
+
+            foreach (var specializedSitemapFor in providerContext.Describes.Values) {
+                urlset.Add(new XAttribute(XNamespace.Xmlns + specializedSitemapFor.NamespacePrefix, specializedSitemapFor.XNamespace));
+            }
+
             document.Add(urlset);
 
             var rootUrl = GetRootPath();
@@ -387,6 +401,14 @@ namespace WebAdvanced.Sitemap.Services {
                 if (priority >= 0.0 && priority <= 1.0) {
                     element.Add(new XElement(xmlns + "priority", (item.Priority - 1)/4.0));
                 }
+
+                foreach (var specializedSitemapFor in providerContext.Describes.Values) {
+                    var xElement = specializedSitemapFor.Process(item.ContentItem, item.Url);
+                    if (xElement != null) {
+                        element.Add(xElement);
+                    }
+                }
+
                 urlset.Add(element);
             }
 

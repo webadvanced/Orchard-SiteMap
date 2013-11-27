@@ -106,6 +106,8 @@
     <Compile Include="Models\SitemapRouteRecord.cs" />
     <Compile Include="Models\SitemapSettingsRecord.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Services\DescribeSpecializedSitemapFor.cs" />
+    <Compile Include="Services\DescribeSpecializedSitemapProviderContext.cs" />
     <Compile Include="Services\ISitemapRouteFilter.cs" />
     <Compile Include="Providers\Impl\ContentRouteProvider.cs" />
     <Compile Include="Providers\Impl\CustomRouteProvider.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Services\AdvancedSitemapService.cs" />
     <Compile Include="Models\SitemapNode.cs" />
     <Compile Include="Services\IAdvancedSitemapService.cs" />
+    <Compile Include="Services\ISpecializedSitemapProvider.cs" />
     <Compile Include="ViewModels\CustomRouteModel.cs" />
     <Compile Include="ViewModels\IndexingPageModel.cs" />
     <Compile Include="ViewModels\IndexSettingsModel.cs" />
