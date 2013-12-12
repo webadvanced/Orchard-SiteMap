@@ -197,7 +197,7 @@ namespace WebAdvanced.Sitemap.Services {
             return _cacheManager.Get("WebAdvanced.Sitemap.Routes",
                 ctx => {
                     ctx.Monitor(_signals.When("WebAdvanced.Sitemap.Refresh"));
-                    var slugs = new Dictionary<string, string>(); // slug => Title (if available)
+                    var slugs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase); // slug => Title (if available)
 
                     // Extract filtered routes from route providers
                     foreach(var provider in _routeProviders) {
@@ -271,7 +271,8 @@ namespace WebAdvanced.Sitemap.Services {
             // Create dictionary indexed by routes
             var routeSettings = GetRoutes().ToDictionary(
                 k => k.Slug,
-                v => v);
+                v => v, 
+                StringComparer.OrdinalIgnoreCase);
 
             var sitemapRoot = _cacheManager.Get("WebAdvanced.Sitemap.Root", ctx => {
                 ctx.Monitor(_signals.When("WebAdvanced.Sitemap.Refresh"));
