@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.ContentManagement;
@@ -8,6 +11,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 using Orchard.Services;
+using Orchard.Settings;
 using WebAdvanced.Sitemap.Models;
 using WebAdvanced.Sitemap.Providers;
 using WebAdvanced.Sitemap.ViewModels;
@@ -26,6 +30,8 @@ namespace WebAdvanced.Sitemap.Services {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IEnumerable<ISitemapRouteFilter> _routeFilters;
         private readonly IEnumerable<ISitemapRouteProvider> _routeProviders;
+        private readonly ISiteService _siteService;
+        private readonly IEnumerable<ISpecializedSitemapProvider> _specializedSitemapProviders;
 
         public AdvancedSitemapService(
             IRepository<SitemapRouteRecord> routeRepository, 
@@ -37,7 +43,9 @@ namespace WebAdvanced.Sitemap.Services {
             IClock clock,
             IContentDefinitionManager contentDefinitionManager,
             IEnumerable<ISitemapRouteFilter> routeFilters,
-            IEnumerable<ISitemapRouteProvider> routeProviders) {
+            IEnumerable<ISitemapRouteProvider> routeProviders, 
+            ISiteService siteService, 
+            IEnumerable<ISpecializedSitemapProvider> specializedSitemapProviders) {
             _routeRepository = routeRepository;
             _settingsRepository = settingsRepository;
             _customRouteRepository = customRouteRepository;
@@ -48,6 +56,8 @@ namespace WebAdvanced.Sitemap.Services {
             _contentDefinitionManager = contentDefinitionManager;
             _routeFilters = routeFilters;
             _routeProviders = routeProviders;
+            _siteService = siteService;
+            _specializedSitemapProviders = specializedSitemapProviders;
         }
 
         public void SetIndexSettings(IEnumerable<IndexSettingsModel> settings) {
@@ -319,6 +329,91 @@ namespace WebAdvanced.Sitemap.Services {
             });
 
             return sitemapRoot;
+        }
+
+        private string GetRootPath()
+        {
+            var baseUrl = _siteService.GetSiteSettings().BaseUrl;
+            if (!baseUrl.EndsWith("/"))
+                baseUrl += "/";
+            return baseUrl;
+        }
+
+        public XDocument GetSitemapDocument()
+        {
+            return _cacheManager.Get("sitemap.xml", BuildSitemapDocument);
+        }
+
+        private XDocument BuildSitemapDocument(AcquireContext<string> ctx) {
+            ctx.Monitor(_clock.When(TimeSpan.FromHours(1.0)));
+            ctx.Monitor(_signals.When("WebAdvanced.Sitemap.XmlRefresh"));
+
+            XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
+
+            var providerContext = new DescribeSpecializedSitemapProviderContext();
+            foreach (var specializedSitemapProvider in _specializedSitemapProviders) {
+                specializedSitemapProvider.Describe(providerContext);
+            }
+
+            var document = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+            var urlset = new XElement(xmlns + "urlset");
+
+            foreach (var specializedSitemapFor in providerContext.Describes.Values) {
+                urlset.Add(new XAttribute(XNamespace.Xmlns + specializedSitemapFor.NamespacePrefix, specializedSitemapFor.XNamespace));
+            }
+
+            document.Add(urlset);
+
+            var rootUrl = GetRootPath();
+
+            // Add filtered routes
+            var routeUrls = new HashSet<string>(); // Don't include the same url twice
+            var items = new List<SitemapRoute>();
+
+            // Process routes from providers in order of high to low priority to allow custom routes
+            // to be processed first and thus override content routes.
+            foreach (var provider in _routeProviders.OrderByDescending(p => p.Priority)) {
+                var validRoutes = provider.GetXmlRoutes().Where(r => _routeFilters.All(filter => filter.AllowUrl(r.Url))).AsEnumerable();
+
+                foreach (var item in validRoutes) {
+                    if (routeUrls.Contains(item.Url)) {
+                        continue;
+                    }
+
+                    routeUrls.Add(item.Url);
+                    items.Add(item);
+                }
+            }
+
+            // Ensure routes with higher priority are listed first
+            foreach (var item in items.OrderByDescending(i => i.Priority).ThenBy(i => i.Url)) {
+                string url = item.Url;
+                if (!Regex.IsMatch(item.Url, @"^\w+://.*$")) {
+                    url = rootUrl + item.Url.TrimStart('/');
+                }
+
+                var element = new XElement(xmlns + "url");
+                element.Add(new XElement(xmlns + "loc", url));
+                element.Add(new XElement(xmlns + "changefreq", item.UpdateFrequency));
+                if (item.LastUpdated.HasValue) {
+                    element.Add(new XElement(xmlns + "lastmod", item.LastUpdated.Value.ToString("yyyy-MM-dd")));
+                }
+                var priority = (item.Priority - 1)/4.0;
+                if (priority >= 0.0 && priority <= 1.0) {
+                    element.Add(new XElement(xmlns + "priority", (item.Priority - 1)/4.0));
+                }
+
+                foreach (var specializedSitemapFor in providerContext.Describes.Values) {
+                    var xElement = specializedSitemapFor.Process(item.ContentItem, item.Url);
+                    if (xElement != null) {
+                        element.Add(xElement);
+                    }
+                }
+
+                urlset.Add(element);
+            }
+
+            return document;
         }
     }
 }
