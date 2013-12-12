@@ -1,5 +1,6 @@
 ﻿@model WebAdvanced.Sitemap.ViewModels.IndexingPageModel
 @{
+    Script.Require("jQuery").AtFoot();
     Style.Include("WebAdvanced.Sitemap.Admin.css");
     Script.Include("admin.indexsettings.js");
     Layout.Title = T("Sitemap Indexing Settings").ToString();
