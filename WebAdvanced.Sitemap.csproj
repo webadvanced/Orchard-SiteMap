@@ -128,6 +128,8 @@
     <Compile Include="Models\SitemapRouteRecord.cs" />
     <Compile Include="Models\SitemapSettingsRecord.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Recipes\Builders\SitemapStep.cs" />
+    <Compile Include="Recipes\Executors\SitemapStep.cs" />
     <Compile Include="Services\DescribeSpecializedSitemapFor.cs" />
     <Compile Include="Services\DescribeSpecializedSitemapProviderContext.cs" />
     <Compile Include="Services\ISitemapRouteFilter.cs" />
