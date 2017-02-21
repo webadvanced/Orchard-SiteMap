@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 using Orchard.Services;
@@ -18,7 +15,6 @@ using WebAdvanced.Sitemap.ViewModels;
 using WebAdvanced.Sitemap.Extensions;
 
 namespace WebAdvanced.Sitemap.Services {
-    [UsedImplicitly]
     public class AdvancedSitemapService : IAdvancedSitemapService {
         readonly IRepository<SitemapRouteRecord> _routeRepository;
         readonly IRepository<SitemapSettingsRecord> _settingsRepository;
